@@ -1,0 +1,94 @@
+//https://www.facebook.com/srishti.agrawal.714/posts/162113345582696
+//Subscribed by Srishti Agrawal
+#include<stdio.h>
+#define MAX_STACK_SIZE 100
+#define MAX_EXPR_SIZE 100
+typedef enum{
+    lparen,rparen,plus,minus,times,divide,mod,eos,operand
+}precedence;
+
+
+int stack[MAX_STACK_SIZE];
+char expr[MAX_EXPR_SIZE];
+
+
+precedence get_token(char *symbol,int *n){
+    *symbol=expr[(*n)++];
+
+    switch(*symbol)
+    {
+        case '(':return lparen;
+
+        case ')':return rparen;
+
+        case '+':return plus;
+
+        case '-':return minus;
+
+        case '%':return mod;
+        case '/':return divide;
+
+        case '\0':return eos;
+        case '*':return times;
+
+        default: return operand;
+
+    }
+}
+
+void add(int *top,int x){
+
+    stack[++*top]=x;
+
+}
+int delete(int *top){
+    return stack[(*top)--];
+}
+int eval(){
+    precedence token;
+    char symbol;
+    int op1,op2;
+    int n=0;
+    int top=-1;
+    token=get_token(&symbol,&n);
+    while(token!=eos){
+
+        if(token==operand)
+            add(&top,symbol-'0');
+        else
+        {
+            op2=delete(&top);
+            op1=delete(&top);
+            switch(token)
+            {
+
+            case plus: add(&top,op1+op2);
+                        break;
+            case minus: add(&top,op1-op2);
+                        break;
+            case times:
+                        add(&top,op1*op2);
+
+                        break;
+            case divide: add(&top,op1/op2);
+                        break;
+            case mod: add(&top,op1%op2);
+                        break;
+            }
+        }
+        token=get_token(&symbol,&n);
+    }
+    return delete(&top);
+
+}
+
+
+int main()
+{
+    printf("Enter expression to be evaluated");
+    gets(expr);
+    printf("\nResult= %d",eval());
+
+    return 0;
+}
+
