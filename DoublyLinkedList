@@ -1,0 +1,110 @@
+//https://www.facebook.com/srishti.agrawal.714/posts/162113345582696
+//Subscribed by Srishti Agrawal
+#include<stdio.h>
+typedef struct Node *listptr;
+typedef struct Node{
+    listptr llink;
+    int key;
+    listptr rlink;
+};
+
+void insert(int item,listptr head){
+    listptr temp;
+    temp=(listptr)malloc(sizeof(struct Node));
+    temp->key=item;
+    temp->llink=head;
+    temp->rlink=head->rlink;
+    head->rlink->llink=temp;
+    head->rlink=temp;
+    head=temp;
+}
+
+int del(int item,listptr head){
+    if(head==NULL){
+
+            printf("EMPTY LIST");
+            return 0;
+        }
+    head=head->rlink;
+    if((head)->key==-1){
+        printf("Cannot delete header node\n");
+        return item;
+    }
+    while((head)->key!=-1){
+        if(head->key==item){
+            printf("Element deleted:%d",item);
+            if(head->rlink)
+                (head->llink)->rlink=head->rlink;
+            if(head->llink)
+                (head->rlink)->llink=head->llink;
+            return item;
+        }
+        head=head->rlink;
+    }
+    printf("Element not found\n");
+    return 0;
+}
+
+void displayr(listptr head){
+    printf("\n");
+    head=head->rlink;
+    if(head==NULL){
+        printf("Empty List");
+        return ;
+    }
+    while((head->rlink)->key!=-1){
+        printf("%d\t",head->key);
+        head=head->rlink;
+    }
+    if((head->rlink)->key!=-1){
+        printf("%d\t",head->key);
+        head=head->rlink;
+    }
+    if(head->key!=-1)
+        printf("%d\t",head->key);
+    else printf("EMPTY LIST\n");
+}
+
+void displayf(listptr head){
+    head=head->llink;
+    if(head==NULL){
+        printf("EMPTY LIST\n");
+        return;
+    }
+    while((head->llink)->key!=-1){
+        printf("%d\t",head->key);
+        head=head->llink;
+    }
+    printf("%d\n",head->key);
+}
+
+int main(){
+    int ch,element;
+    listptr head;
+    head=(listptr)malloc(sizeof(struct Node));
+    head->key=-1;
+    head->llink=head;
+    head->rlink=head;
+    while(1){
+        printf("\nMenu:\n1.Insert a node\n2.Delete a Node\n3.Display doubly linked list in forward direction\n4.Display doubly linked circular list in reverse direction\n5.Exit\nEnter your choice:");
+        scanf("%d",&ch);
+        switch(ch){
+            case 1:printf("Enter data:");
+                    scanf("%d",&element);
+                    insert(element,head);
+                    break;
+            case 2:printf("Enter element to be deleted\n");
+                    scanf("%d",&element);
+                    del(element,head);
+                    break;
+            case 3:printf("The current doubly linked circular list is:");
+                    displayf(head);
+                    break;
+            case 4:printf("The current doubly linked circular list in reverse is:");
+                    displayr(head);
+                    break;
+            case 5:exit(0);
+        }
+    }
+
+}
